@@ -1,10 +1,12 @@
 'use strict';
 class ToDo {
-    constructor(form, input, todoList, todoCompleted) {
+    constructor(form, input, todoList, todoCompleted, todoRemove,todoComplete ) {
         this.form = document.querySelector(form);
         this.input = document.querySelector(input);
         this.todoList = document.querySelector(todoList);
         this.todoCompleted = document.querySelector(todoCompleted);
+        this.todoRemove = document.querySelector(todoRemove);
+        this.todoComplete = document.querySelector(todoComplete);
         this.todoData = new Map(JSON.parse(localStorage.getItem('toDokey')));
     }
     addToStorage() {
@@ -53,24 +55,26 @@ class ToDo {
     init() {
         this.form.addEventListener('submit', this.addTodo.bind(this));
 
-
+         this.handler()
         this.render();
     }
     generateKey() {
         return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     }
-    deleteItem() {
+    deleteItem(event) {
+console.log(event);
 
     }
     completedItem() {
 
     }
     handler() {
-        //Делегирование
+        this.todoRemove.addEventListener('click', this.deleteItem);
+        this.todoComplete.addEventListener('click', this.completedItem);
     }
 
 }
-const todo = new ToDo('.todo-control', '.header-input', '.todo-list', '.todo-completed');
+const todo = new ToDo('.todo-control', '.header-input', '.todo-list', '.todo-completed', 'todo-remove', 'todo-complete');
 todo.init();
 
 
