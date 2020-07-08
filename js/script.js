@@ -1,12 +1,14 @@
 'use strict';
+
 class ToDo {
-    constructor(form, input, todoList, todoCompleted, todoRemove,todoComplete ) {
+    constructor(form, input, todoList, todoCompleted, todoRemove, todoComplete, todoContainer) {
         this.form = document.querySelector(form);
         this.input = document.querySelector(input);
         this.todoList = document.querySelector(todoList);
         this.todoCompleted = document.querySelector(todoCompleted);
         this.todoRemove = document.querySelector(todoRemove);
         this.todoComplete = document.querySelector(todoComplete);
+        this.todoContainer = document.querySelectorAll(todoContainer);
         this.todoData = new Map(JSON.parse(localStorage.getItem('toDokey')));
     }
     addToStorage() {
@@ -55,27 +57,42 @@ class ToDo {
     init() {
         this.form.addEventListener('submit', this.addTodo.bind(this));
 
-         this.handler()
+        this.handler();
         this.render();
     }
     generateKey() {
         return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     }
     deleteItem(event) {
-console.log(event);
+        console.log(event);
 
     }
     completedItem() {
 
     }
     handler() {
-        this.todoRemove.addEventListener('click', this.deleteItem);
-        this.todoComplete.addEventListener('click', this.completedItem);
+
+        this.todoContainer.forEach(item => {
+            console.log(item);
+            item.addEventListener('click', event => {
+                const target = event.target;
+
+                for (let i = 0; i < this.todoContainer.length; i++) {
+                    target.classList.contains('todo-remove');
+                    console.log(i);
+                    this.deleteItem();
+                }
+                target.classList.contains('todo-complete');
+                this.completedItem();
+
+            });
+        });
     }
 
 }
-const todo = new ToDo('.todo-control', '.header-input', '.todo-list', '.todo-completed', 'todo-remove', 'todo-complete');
+const todo = new ToDo('.todo-control', '.header-input', '.todo-list', '.todo-completed', 'todo-remove', 'todo-complete', 'todo-container');
 todo.init();
+todo.handler();
 
 
 
