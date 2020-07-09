@@ -1,14 +1,14 @@
 'use strict';
 
 class ToDo {
-    constructor(form, input, todoList, todoCompleted, todoRemove, todoComplete, todoContainer) {
+    constructor(form, input, todoList, todoCompleted, todoContainer, todoItem) {
         this.form = document.querySelector(form);
         this.input = document.querySelector(input);
         this.todoList = document.querySelector(todoList);
         this.todoCompleted = document.querySelector(todoCompleted);
-        this.todoRemove = document.querySelector(todoRemove);
-        this.todoComplete = document.querySelector(todoComplete);
-        this.todoContainer = document.querySelectorAll(todoContainer);
+        this.todoContainer = document.querySelector(todoContainer);
+        this.todoItem = document.querySelectorAll(todoItem);
+
         this.todoData = new Map(JSON.parse(localStorage.getItem('toDokey')));
     }
     addToStorage() {
@@ -23,7 +23,7 @@ class ToDo {
     createItem(todo) {
         const li = document.createElement('li');
         li.classList.add('todo-item');
-        li.key = todo.key;
+        li.dataset.key = todo.key;
         li.insertAdjacentHTML('beforeend', `
         <span class="text-todo">${todo.value}</span>
         <div class="todo-buttons">
@@ -63,36 +63,47 @@ class ToDo {
     generateKey() {
         return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     }
-    deleteItem(event) {
-        console.log(event);
+    deleteItem(id) {
+
+
+        this.todoData.forEach(index => {
+            if (index.key === id) {
+                console.log(index);
+                this.todoData.delete(index);
+                console.log(this.todoData);
+
+            }
+        });
+
+
+        this.render();
+
+
+
 
     }
-    completedItem() {
+    completedItem(id) {
+
 
     }
     handler() {
-
-        this.todoContainer.forEach(item => {
-            console.log(item);
-            item.addEventListener('click', event => {
-                const target = event.target;
-
-                for (let i = 0; i < this.todoContainer.length; i++) {
-                    target.classList.contains('todo-remove');
-                    console.log(i);
-                    this.deleteItem();
-                }
-                target.classList.contains('todo-complete');
-                this.completedItem();
-
-            });
+        this.todoContainer.addEventListener('click', e => {
+            let id;
+            if (e.target.closest('.todo-remove')) {
+                id = e.target.closest('li').dataset.key;
+                this.deleteItem(id);
+            } else if (e.target.closest('.todo-complete')) {
+                id = e.target.closest('li').dataset.key;
+                this.completedItem(id);
+            }
         });
+
     }
 
 }
-const todo = new ToDo('.todo-control', '.header-input', '.todo-list', '.todo-completed', 'todo-remove', 'todo-complete', 'todo-container');
+const todo = new ToDo('.todo-control', '.header-input', '.todo-list', '.todo-completed', '.todo-container', '.todo-item');
 todo.init();
-todo.handler();
+
 
 
 
