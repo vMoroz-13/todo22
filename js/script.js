@@ -64,27 +64,20 @@ class ToDo {
         return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     }
     deleteItem(id) {
-
-
         this.todoData.forEach(index => {
             if (index.key === id) {
-                console.log(index);
-                this.todoData.delete(index);
-                console.log(this.todoData);
-
+                this.todoData.delete(id);
             }
         });
-
-
         this.render();
-
-
-
-
     }
     completedItem(id) {
-
-
+        this.todoData.forEach(index => {
+            if (index.key === id) {
+                index.completed = !index.completed;
+            }
+        });
+        this.render();
     }
     handler() {
         this.todoContainer.addEventListener('click', e => {
